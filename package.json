@@ -1,0 +1,21 @@
+{ "name": "mongoose-model-decorators"
+, "version": "0.0.0"
+, "description": "ES2016 decorator functions for building Mongoose models."
+, "license": "MIT"
+, "repository": "goto-bus-stop/mongoose-model-decorators"
+, "author": "René Kooi <rene@kooi.me>"
+, "scripts":
+  { "build": "babel --out-dir . src"
+  , "prepublish": "npm run build"
+  , "test": "standard && ava ./test.js" }
+, "keywords":
+  [ "mongoose"
+  , "decorator"
+  , "decorators"
+  , "model" ]
+, "devDependencies":
+  { "ava": "^0.3.0"
+  , "babel": "5.x"
+  , "standard": "5.x" }
+, "peerDependencies":
+  { "mongoose": "3.x" } }
