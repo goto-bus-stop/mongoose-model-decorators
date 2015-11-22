@@ -7,8 +7,8 @@ export default function Model (nameOverride, maybeOptions = {}) {
   let options = typeof nameOverride === 'object' ? nameOverride : maybeOptions
 
   function makeModel (Class) {
-    const makeSchema = Schema(options || {})
-    return mongoose.model(name || Class.name, makeSchema(Class))
+    const SchemaConstructor = Schema(options || {})(Class)
+    return mongoose.model(name || Class.name, new SchemaConstructor())
   }
 
   // @Model
