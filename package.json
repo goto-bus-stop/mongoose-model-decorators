@@ -7,7 +7,8 @@
 , "scripts":
   { "build": "babel --out-dir . src"
   , "prepublish": "npm run build"
-  , "test": "standard && ava ./test.js" }
+  , "test": "ava ./test.js" }
+, "files": [ "index.js", "Model.js", "Plugin.js", "Schema.js" ]
 , "keywords":
   [ "mongoose"
   , "decorator"
@@ -16,6 +17,7 @@
 , "devDependencies":
   { "ava": "^0.3.0"
   , "babel": "5.x"
+  , "babel-eslint": "4.x"
   , "standard": "5.x" }
 , "peerDependencies":
-  { "mongoose": "3.x" } }
+  { "mongoose": "4.x" } }
