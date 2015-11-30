@@ -6,7 +6,7 @@ const ignoreMethods = { constructor: true }
 const ignoreStatics = { length: true, name: true, prototype: true, schema: true }
 
 function makeSchema (Class) {
-  return function SchemaConstructor() {
+  return function SchemaConstructor () {
     const types = Class.schema
     const schema = new MongooseSchema(types)
     const methods = Object.getOwnPropertyNames(Class.prototype).filter(name => !ignoreMethods[name])
