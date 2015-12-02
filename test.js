@@ -10,7 +10,7 @@ class PersonSchema {
     age: Number
   }
 
-  static randomPerson() {
+  static randomPerson () {
     return new this({
       name: 'Random Person',
       age: Math.floor(Math.random() * 100)
@@ -26,6 +26,14 @@ class PersonSchema {
   }
   set nextAge (age) {
     this.age = age - 1
+  }
+}
+
+@Model
+class PersonModel {
+  static schema = {
+    name: String,
+    age: Number
   }
 }
 
@@ -77,5 +85,43 @@ test('@Schema adds virtuals for instance getters and setters', t => {
 test('`this` in static methods passed to @Schema binds to the generated Model class', t => {
   const Person = modelify(new PersonSchema())
   t.ok(Person.randomPerson() instanceof Person)
+  t.end()
+})
+
+test('@Model(className) registers a new model with mongoose', t => {
+  @Model('ModelTest0')
+  class Anon {
+    static schema = { value: String }
+  }
+  t.ok(mongoose.modelNames().indexOf('ModelTest0') !== -1)
+
+  t.end()
+})
+
+test('@Model and @Model() infer the model name from the decorated class', t => {
+  @Model
+  class ModelTest1 {
+    static schema = { a: String }
+  }
+  t.ok(mongoose.modelNames().indexOf('ModelTest1') !== -1)
+
+  @Model()
+  class ModelTest2 {
+    static schema = { b: String }
+  }
+  t.ok(mongoose.modelNames().indexOf('ModelTest2') !== -1)
+
+  t.end()
+})
+
+test('@Model(options) are passed to the schema constructor', t => {
+  @Model({ typeKey: 'tests!' })
+  class ModelTestWithOptions {
+    static schema = { c: String }
+  }
+
+  const retrievedOptions = mongoose.modelSchemas.ModelTestWithOptions.options
+  t.is(retrievedOptions.typeKey, 'tests!')
+
   t.end()
 })
