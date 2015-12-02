@@ -5,10 +5,10 @@ import { pluginsSymbol } from './Plugin'
 const ignoreMethods = { constructor: true }
 const ignoreStatics = { length: true, name: true, prototype: true, schema: true }
 
-function makeSchema (Class) {
+const makeSchema = options => Class => {
   return function SchemaConstructor () {
     const types = Class.schema
-    const schema = new MongooseSchema(types)
+    const schema = new MongooseSchema(types, options)
     const methods = Object.getOwnPropertyNames(Class.prototype).filter(name => !ignoreMethods[name])
     const statics = Object.getOwnPropertyNames(Class).filter(name => !ignoreStatics[name])
     methods.forEach(name => {
@@ -40,12 +40,12 @@ function makeSchema (Class) {
 export default function Schema (options) {
   // bare @Schema decorator
   if (typeof options === 'function') {
-    return makeSchema(options)
+    return makeSchema({})(options)
   }
 
   // @Schema()
   if (!options) {
-    return makeSchema
+    return makeSchema({})
   }
 
   let plugins = []
@@ -63,6 +63,6 @@ export default function Schema (options) {
     } else {
       Class[pluginsSymbol] = plugins
     }
-    return makeSchema(Class)
+    return makeSchema(options)(Class)
   }
 }
