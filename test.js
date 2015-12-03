@@ -88,6 +88,32 @@ test('`this` in static methods passed to @Schema binds to the generated Model cl
   t.end()
 })
 
+test('Schema options can be defined as static class properties', t => {
+  const schema = new (
+    @Schema
+    class {
+      static typeKey = 'anotherType'
+    }
+  )
+
+  t.is(schema.options.typeKey, 'anotherType')
+  t.end()
+})
+
+test('Schema options passed to @Schema override options defined in the class body', t => {
+  const schema = new (
+    @Schema({ typeKey: 'definedInDecorator' })
+    class {
+      static typeKey = 'definedInClass'
+      static versionKey = 'alsoDefinedInClass'
+    }
+  )
+
+  t.is(schema.options.typeKey, 'definedInDecorator')
+  t.is(schema.options.versionKey, 'alsoDefinedInClass')
+  t.end()
+})
+
 test('@Model(className) registers a new model with mongoose', t => {
   @Model('ModelTest0')
   class Anon {

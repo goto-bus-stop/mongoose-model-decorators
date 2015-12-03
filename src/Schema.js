@@ -2,15 +2,30 @@ import { Schema as MongooseSchema } from 'mongoose'
 
 import { pluginsSymbol } from './Plugin'
 
+const optionNames = `strict bufferCommands capped versionKey
+                     discriminatorKey minimize autoIndex shardKey
+                     read validateBeforeSave _id id typeKey`.split(/\s+/g)
+
 const ignoreMethods = { constructor: true }
 const ignoreStatics = { length: true, name: true, prototype: true, schema: true }
+
+optionNames.forEach(name => ignoreStatics[name] = true)
 
 const makeSchema = options => Class => {
   return function SchemaConstructor () {
     const types = Class.schema
-    const schema = new MongooseSchema(types, options)
     const methods = Object.getOwnPropertyNames(Class.prototype).filter(name => !ignoreMethods[name])
     const statics = Object.getOwnPropertyNames(Class).filter(name => !ignoreStatics[name])
+    const classOptions = optionNames
+      .filter(name => name in Class)
+      .reduce((opts, name) => {
+        opts[name] = Class[name]
+        return opts
+      }, {})
+
+    // options passed to the decorator constructor override options defined in
+    // the class body
+    const schema = new MongooseSchema(types, { ...classOptions, ...options })
     methods.forEach(name => {
       const prop = Object.getOwnPropertyDescriptor(Class.prototype, name)
       if (typeof prop.get === 'function') {
