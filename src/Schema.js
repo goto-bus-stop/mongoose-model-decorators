@@ -38,9 +38,15 @@ const makeSchema = options => Class => {
         schema.method(name, prop.value)
       }
     })
-    statics.forEach(name => {
-      schema.static(name, Class[name])
-    })
+    if (statics.length > 0) {
+      schema.on('init', Model => {
+        statics.forEach(name => {
+          Object.defineProperty(Model, name,
+            Object.getOwnPropertyDescriptor(Class, name)
+          )
+        })
+      })
+    }
 
     if (Class[pluginsSymbol]) {
       Class[pluginsSymbol].forEach(({ plugin, param }) => {

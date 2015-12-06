@@ -17,6 +17,10 @@ class PersonSchema {
     })
   }
 
+  static get count() {
+    return 10
+  }
+
   incrementAge () {
     this.age = this.nextAge
   }
@@ -61,12 +65,6 @@ test('@Schema keeps instance methods', t => {
   t.end()
 })
 
-test('@Schema keeps static methods', t => {
-  const schema = new PersonSchema()
-  t.is(typeof schema.statics.randomPerson, 'function')
-  t.end()
-})
-
 test('@Schema adds virtuals for instance getters and setters', t => {
   const schema = new PersonSchema()
   t.is(typeof schema.virtuals.nextAge, 'object')
@@ -79,6 +77,18 @@ test('@Schema adds virtuals for instance getters and setters', t => {
   person.nextAge = 25
   t.is(person.age, 24)
 
+  t.end()
+})
+
+test('@Schema keeps static methods', t => {
+  const schema = new PersonSchema()
+  t.is(typeof modelify(schema).randomPerson, 'function')
+  t.end()
+})
+
+test('@Schema supports static property getter/setters', t => {
+  const Person = modelify(new PersonSchema())
+  t.is(Person.count, 10)
   t.end()
 })
 
