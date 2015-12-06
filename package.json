@@ -1,5 +1,5 @@
 { "name": "mongoose-model-decorators"
-, "version": "0.0.0"
+, "version": "0.1.0"
 , "description": "ES2016 decorator functions for building Mongoose models."
 , "license": "MIT"
 , "repository": "goto-bus-stop/mongoose-model-decorators"
