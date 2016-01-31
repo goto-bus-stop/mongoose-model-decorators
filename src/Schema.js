@@ -2,6 +2,8 @@ import { Schema as MongooseSchema } from 'mongoose'
 
 import { pluginsSymbol } from './Plugin'
 
+const hooksSymbol = Symbol('hooks')
+
 const optionNames = `strict bufferCommands capped versionKey
                      discriminatorKey minimize autoIndex shardKey
                      read validateBeforeSave _id id typeKey`.split(/\s+/g)
@@ -54,6 +56,19 @@ const makeSchema = options => Class => {
       })
     }
 
+    if (Class[hooksSymbol]) {
+      Class[hooksSymbol].forEach(([ hookName, method, cb ]) => {
+        if (cb.length === 0) {
+          schema[hookName](method, next => {
+            cb()
+            next()
+          })
+        } else {
+          schema[hookName](method, cb)
+        }
+      })
+    }
+
     return schema
   }
 }
@@ -84,6 +99,25 @@ export default function Schema (options) {
     } else {
       Class[pluginsSymbol] = plugins
     }
+
     return makeSchema(options)(Class)
   }
+}
+
+export function hook (hookName, method) {
+  return (proto, name, descriptor) => {
+    const Class = proto.constructor
+    if (!Class[hooksSymbol]) {
+      Class[hooksSymbol] = []
+    }
+    Class[hooksSymbol].push([ hookName, method, descriptor.value ])
+  }
+}
+
+export function pre (method) {
+  return hook('pre', method)
+}
+
+export function post (method) {
+  return hook('post', method)
 }

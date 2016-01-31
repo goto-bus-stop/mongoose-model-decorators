@@ -1,7 +1,7 @@
 import test from 'ava'
 import mongoose, { Schema as MongooseSchema } from 'mongoose'
 import Model from './Model'
-import Schema from './Schema'
+import Schema, { pre } from './Schema'
 
 const PersonSchema = Schema(class PersonSchema {
   static schema = {
@@ -143,4 +143,19 @@ test('@Model(options) are passed to the schema constructor', t => {
 
   const retrievedOptions = mongoose.modelSchemas.ModelTestWithOptions.options
   t.is(retrievedOptions.typeKey, 'tests!')
+})
+
+test('@pre(\'method\') adds a hook to "method"', t => {
+  let hookRan = false
+  const TestSchema = Schema(class {
+    @pre('save')
+    logSave () {
+      hookRan = true
+    }
+  })
+
+  const TestModel = modelify(new TestSchema())
+  t.is(hookRan, false)
+  return new TestModel().save()
+    .then(() => t.is(hookRan, true))
 })
