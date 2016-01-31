@@ -59,8 +59,8 @@ const makeSchema = options => Class => {
     if (Class[hooksSymbol]) {
       Class[hooksSymbol].forEach(([ hookName, method, cb ]) => {
         if (cb.length === 0) {
-          schema[hookName](method, next => {
-            cb()
+          schema[hookName](method, function (next) {
+            cb.call(this)
             next()
           })
         } else {

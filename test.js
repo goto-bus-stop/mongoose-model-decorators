@@ -159,3 +159,18 @@ test('@pre(\'method\') adds a hook to "method"', t => {
   return new TestModel().save()
     .then(() => t.is(hookRan, true))
 })
+
+test('@pre(\'method\') hooks that do not call `next()` have the correct `this`', t => {
+  let hookModel = null
+  const TestSchema = Schema(class {
+    @pre('save')
+    logSave () {
+      hookModel = this
+    }
+  })
+
+  const model = new (modelify(new TestSchema()))
+  t.is(hookModel, null)
+  return model.save()
+    .then(() => t.is(hookModel, model))
+});
