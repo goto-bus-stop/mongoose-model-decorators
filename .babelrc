@@ -1,3 +1,5 @@
-{
-  "optional": [ "es7.classProperties", "es7.decorators", "es7.exportExtensions" ]
-}
+{ "presets": [ "es2015", "stage-2" ]
+, "plugins":
+  [ "transform-class-properties"
+  , "transform-decorators-legacy"
+  , "transform-export-extensions" ] }
