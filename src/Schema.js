@@ -4,9 +4,11 @@ import { pluginsSymbol } from './Plugin'
 
 const hooksSymbol = Symbol('hooks')
 
-const optionNames = `strict bufferCommands capped versionKey
-                     discriminatorKey minimize autoIndex shardKey
-                     read validateBeforeSave _id id typeKey`.split(/\s+/g)
+const optionNames = [
+  'autoIndex', 'bufferCommands', 'capped', 'collection', 'emitIndexErrors',
+  'id', '_id', 'minimize', 'read', 'safe', 'shardKey', 'strict', 'toJSON',
+  'toObject', 'typeKey', 'validateBeforeSave', 'versionKey'
+]
 
 const ignoreMethods = { constructor: true }
 const ignoreStatics = { length: true, name: true, prototype: true, schema: true }
