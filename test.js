@@ -3,7 +3,8 @@ import mongoose, { Schema as MongooseSchema } from 'mongoose'
 import Model from './Model'
 import Schema, { pre } from './Schema'
 
-const PersonSchema = Schema(class PersonSchema {
+@Schema
+class PersonSchema {
   static schema = {
     name: String,
     age: Number
@@ -30,14 +31,15 @@ const PersonSchema = Schema(class PersonSchema {
   set nextAge (age) {
     this.age = age - 1
   }
-})
+}
 
-const PersonModel = Model(class PersonModel {
+@Model
+class PersonModel {
   static schema = {
     name: String,
     age: Number
   };
-})
+}
 
 let modelN = 0
 function modelify(schema) {
@@ -91,9 +93,10 @@ test('`this` in static methods passed to @Schema binds to the generated Model cl
 
 test('Schema options can be defined as static class properties', t => {
   const schema = new (
-    Schema(class {
+    @Schema
+    class {
       static typeKey = 'anotherType';
-    })
+    }
   )
 
   t.is(schema.options.typeKey, 'anotherType')
@@ -101,10 +104,11 @@ test('Schema options can be defined as static class properties', t => {
 
 test('Schema options passed to @Schema override options defined in the class body', t => {
   const schema = new (
-    Schema({ typeKey: 'definedInDecorator' })(class {
+    @Schema({ typeKey: 'definedInDecorator' })
+    class {
       static typeKey = 'definedInClass';
       static versionKey = 'alsoDefinedInClass';
-    })
+    }
   )
 
   t.is(schema.options.typeKey, 'definedInDecorator')
@@ -112,34 +116,32 @@ test('Schema options passed to @Schema override options defined in the class bod
 })
 
 test('@Model(className) registers a new model with mongoose', t => {
-  const Anon = Model('ModelTest0')(class {
+  @Model('ModelTest0')
+  class Anon {
     static schema = { value: String };
-  })
+  }
   t.ok(mongoose.modelNames().indexOf('ModelTest0') !== -1)
 })
 
 test('@Model and @Model() infer the model name from the decorated class', t => {
-  Model(
-    class ModelTest1 {
-      static schema = { a: String };
-    }
-  )
+  @Model
+  class ModelTest1 {
+    static schema = { a: String };
+  }
   t.ok(mongoose.modelNames().indexOf('ModelTest1') !== -1)
 
-  Model()(
-    class ModelTest2 {
-      static schema = { b: String };
-    }
-  )
+  @Model()
+  class ModelTest2 {
+    static schema = { b: String };
+  }
   t.ok(mongoose.modelNames().indexOf('ModelTest2') !== -1)
 })
 
 test('@Model(options) are passed to the schema constructor', t => {
-  Model({ typeKey: 'tests!' })(
-    class ModelTestWithOptions {
-      static schema = { c: String };
-    }
-  )
+  @Model({ typeKey: 'tests!' })
+  class ModelTestWithOptions {
+    static schema = { c: String };
+  }
 
   const retrievedOptions = mongoose.modelSchemas.ModelTestWithOptions.options
   t.is(retrievedOptions.typeKey, 'tests!')
@@ -147,12 +149,13 @@ test('@Model(options) are passed to the schema constructor', t => {
 
 test('@pre(\'method\') adds a hook to "method"', t => {
   let hookRan = false
-  const TestSchema = Schema(class {
+  @Schema
+  class TestSchema {
     @pre('save')
     logSave () {
       hookRan = true
     }
-  })
+  }
 
   const TestModel = modelify(new TestSchema())
   t.is(hookRan, false)
@@ -162,12 +165,13 @@ test('@pre(\'method\') adds a hook to "method"', t => {
 
 test('@pre(\'method\') hooks that do not call `next()` have the correct `this`', t => {
   let hookModel = null
-  const TestSchema = Schema(class {
+  @Schema
+  class TestSchema {
     @pre('save')
     logSave () {
       hookModel = this
     }
-  })
+  }
 
   const model = new (modelify(new TestSchema()))
   t.is(hookModel, null)
