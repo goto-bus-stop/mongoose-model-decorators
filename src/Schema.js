@@ -6,8 +6,8 @@ const hooksSymbol = Symbol('hooks')
 
 const optionNames = [
   'autoIndex', 'bufferCommands', 'capped', 'collection', 'emitIndexErrors',
-  'id', '_id', 'minimize', 'read', 'safe', 'shardKey', 'strict', 'toJSON',
-  'toObject', 'typeKey', 'validateBeforeSave', 'versionKey'
+  'id', '_id', 'minimize', 'read', 'safe', 'shardKey', 'strict', 'timestamps',
+  'toJSON', 'toObject', 'typeKey', 'validateBeforeSave', 'versionKey'
 ]
 
 const ignoreMethods = { constructor: true }
