@@ -1,6 +1,6 @@
 {
   "name": "mongoose-model-decorators",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "ES2016 decorator functions for building Mongoose models.",
   "license": "MIT",
   "repository": "goto-bus-stop/mongoose-model-decorators",
