@@ -11,7 +11,7 @@
     "test:lint": "standard test.js src/**/*.js",
     "test:compile": "babel test.js > test.compiled.js",
     "test:clean": "rm test.compiled.js",
-    "test": "(npm run test:compile && ava test.compiled.js ; npm run test:clean) && npm run test:lint"
+    "test": "npm run test:compile && ava test.compiled.js && npm run test:clean && npm run test:lint"
   },
   "standard": {
     "parser": "babel-eslint"
