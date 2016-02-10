@@ -178,13 +178,13 @@ Mongoose Schema and Model equivalents as possible, as transparently as possible.
   <tbody>
     <tr>
       <td> Instance methods </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 methodName () {
   console.log('hi!')
 }</pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.method('methodName', function methodName () {
   console.log('hi!')
@@ -193,13 +193,13 @@ schema.method('methodName', function methodName () {
     </tr>
     <tr>
       <td> Instance getters </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 get propName () {
   return 10
 }</pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.virtual('propName').get(function () {
   return 10
@@ -208,13 +208,13 @@ schema.virtual('propName').get(function () {
     </tr>
     <tr>
       <td> Instance setters </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 set propName (val) {
   console.log('set', val)
 }</pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.virtual('propName').set(function (val) {
   console.log('set', val)
@@ -223,7 +223,7 @@ schema.virtual('propName').set(function (val) {
     </tr>
     <tr>
       <td> Pre/post hooks </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 @pre('validate')
 makeSlug () {
@@ -231,7 +231,7 @@ makeSlug () {
 }
 </pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.pre('validate', function makeSlug () {
   this.slug = slugify(this.username)
@@ -241,13 +241,13 @@ schema.pre('validate', function makeSlug () {
     </tr>
     <tr>
       <td> Static methods </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 static methodName () {
   console.log('static!')
 }</pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.static('methodName', function methodName () {
   console.log('static!')
@@ -256,10 +256,10 @@ schema.static('methodName', function methodName () {
     </tr>
     <tr>
       <td> Static properties </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">static prop = 'SOME_CONSTANT'</pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.on('init', function (ModelClass) {
   Object.defineProperty(ModelClass, 'prop', {
@@ -273,7 +273,7 @@ schema.on('init', function (ModelClass) {
     </tr>
     <tr>
       <td> Static getters and setters </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 static get propName () {
   return 20
@@ -282,7 +282,7 @@ static set propName () {
   throw new Error('Don\'t set this :(')
 }</pre>
       </td>
-      <td>
+      <td style="text-align: left">
         <pre lang="js">
 schema.on('init', function (ModelClass) {
   Object.defineProperty(ModelClass, 'propName', {
