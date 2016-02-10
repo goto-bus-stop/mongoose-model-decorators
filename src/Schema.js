@@ -13,15 +13,17 @@ const optionNames = [
 const ignoreMethods = { constructor: true }
 const ignoreStatics = { length: true, name: true, prototype: true, schema: true }
 
-optionNames.forEach(name => ignoreStatics[name] = true)
+optionNames.forEach((name) => {
+  ignoreStatics[name] = true
+})
 
-const makeSchema = options => Class => {
+const makeSchema = (options) => (Class) => {
   return function SchemaConstructor () {
     const types = Class.schema
-    const methods = Object.getOwnPropertyNames(Class.prototype).filter(name => !ignoreMethods[name])
-    const statics = Object.getOwnPropertyNames(Class).filter(name => !ignoreStatics[name])
+    const methods = Object.getOwnPropertyNames(Class.prototype).filter((name) => !ignoreMethods[name])
+    const statics = Object.getOwnPropertyNames(Class).filter((name) => !ignoreStatics[name])
     const classOptions = optionNames
-      .filter(name => name in Class)
+      .filter((name) => name in Class)
       .reduce((opts, name) => {
         opts[name] = Class[name]
         return opts
@@ -30,7 +32,7 @@ const makeSchema = options => Class => {
     // options passed to the decorator constructor override options defined in
     // the class body
     const schema = new MongooseSchema(types, { ...classOptions, ...options })
-    methods.forEach(name => {
+    methods.forEach((name) => {
       const prop = Object.getOwnPropertyDescriptor(Class.prototype, name)
       if (typeof prop.get === 'function') {
         schema.virtual(name).get(prop.get)
@@ -43,8 +45,8 @@ const makeSchema = options => Class => {
       }
     })
     if (statics.length > 0) {
-      schema.on('init', Model => {
-        statics.forEach(name => {
+      schema.on('init', (Model) => {
+        statics.forEach((name) => {
           Object.defineProperty(Model, name,
             Object.getOwnPropertyDescriptor(Class, name)
           )
@@ -90,12 +92,12 @@ export default function Schema (options) {
 
   // @Schema(options)
   if (typeof options === 'object' && options.plugins) {
-    plugins = options.plugins.map(plugin => Array.isArray(plugin)
+    plugins = options.plugins.map((plugin) => Array.isArray(plugin)
       ? { plugin: plugin[0], param: plugin[1] }
       : { plugin: plugin })
   }
 
-  return Class => {
+  return (Class) => {
     if (Class[pluginsSymbol]) {
       Class[pluginsSymbol] = [ ...Class[pluginsSymbol], ...plugins ]
     } else {

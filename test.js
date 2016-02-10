@@ -3,6 +3,10 @@ import mongoose, { Schema as MongooseSchema } from 'mongoose'
 import Model from './Model'
 import Schema, { pre } from './Schema'
 
+// the padded-blocks rule doesn't play nice with lines containing only
+// decorators calls, so we disable it!
+/* eslint-disable padded-blocks */
+
 @Schema
 class PersonSchema {
   static schema = {
@@ -17,7 +21,7 @@ class PersonSchema {
     })
   }
 
-  static get count() {
+  static get count () {
     return 10
   }
 
@@ -33,26 +37,18 @@ class PersonSchema {
   }
 }
 
-@Model
-class PersonModel {
-  static schema = {
-    name: String,
-    age: Number
-  };
-}
-
 let modelN = 0
-function modelify(schema) {
+function modelify (schema) {
   return mongoose.model(`Model_${modelN++}`, schema)
 }
 
-test('@Schema converts an ES2016 class to a mongoose.Schema', t => {
+test('@Schema converts an ES2016 class to a mongoose.Schema', (t) => {
   const schema = new PersonSchema()
   t.ok(schema !== null)
   t.ok(schema instanceof MongooseSchema)
 })
 
-test('@Schema keeps instance methods', t => {
+test('@Schema keeps instance methods', (t) => {
   const schema = new PersonSchema()
   t.is(typeof schema.methods.incrementAge, 'function')
 
@@ -63,7 +59,7 @@ test('@Schema keeps instance methods', t => {
   t.is(person.age, 13)
 })
 
-test('@Schema adds virtuals for instance getters and setters', t => {
+test('@Schema adds virtuals for instance getters and setters', (t) => {
   const schema = new PersonSchema()
   t.is(typeof schema.virtuals.nextAge, 'object')
   t.is(schema.virtuals.nextAge.getters.length, 1)
@@ -76,22 +72,22 @@ test('@Schema adds virtuals for instance getters and setters', t => {
   t.is(person.age, 24)
 })
 
-test('@Schema keeps static methods', t => {
+test('@Schema keeps static methods', (t) => {
   const schema = new PersonSchema()
   t.is(typeof modelify(schema).randomPerson, 'function')
 })
 
-test('@Schema supports static property getter/setters', t => {
+test('@Schema supports static property getter/setters', (t) => {
   const Person = modelify(new PersonSchema())
   t.is(Person.count, 10)
 })
 
-test('`this` in static methods passed to @Schema binds to the generated Model class', t => {
+test('`this` in static methods passed to @Schema binds to the generated Model class', (t) => {
   const Person = modelify(new PersonSchema())
   t.ok(Person.randomPerson() instanceof Person)
 })
 
-test('Schema options can be defined as static class properties', t => {
+test('Schema options can be defined as static class properties', (t) => {
   const schema = new (
     @Schema
     class {
@@ -102,7 +98,7 @@ test('Schema options can be defined as static class properties', t => {
   t.is(schema.options.typeKey, 'anotherType')
 })
 
-test('Schema options passed to @Schema override options defined in the class body', t => {
+test('Schema options passed to @Schema override options defined in the class body', (t) => {
   const schema = new (
     @Schema({ typeKey: 'definedInDecorator' })
     class {
@@ -115,31 +111,31 @@ test('Schema options passed to @Schema override options defined in the class bod
   t.is(schema.options.versionKey, 'alsoDefinedInClass')
 })
 
-test('@Model(className) registers a new model with mongoose', t => {
+test('@Model(className) registers a new model with mongoose', (t) => {
   @Model('ModelTest0')
-  class Anon {
+  class Anon { // eslint-disable-line no-unused-vars
     static schema = { value: String };
   }
   t.ok(mongoose.modelNames().indexOf('ModelTest0') !== -1)
 })
 
-test('@Model and @Model() infer the model name from the decorated class', t => {
+test('@Model and @Model() infer the model name from the decorated class', (t) => {
   @Model
-  class ModelTest1 {
+  class ModelTest1 { // eslint-disable-line no-unused-vars
     static schema = { a: String };
   }
   t.ok(mongoose.modelNames().indexOf('ModelTest1') !== -1)
 
   @Model()
-  class ModelTest2 {
+  class ModelTest2 { // eslint-disable-line no-unused-vars
     static schema = { b: String };
   }
   t.ok(mongoose.modelNames().indexOf('ModelTest2') !== -1)
 })
 
-test('@Model(options) are passed to the schema constructor', t => {
+test('@Model(options) are passed to the schema constructor', (t) => {
   @Model({ typeKey: 'tests!' })
-  class ModelTestWithOptions {
+  class ModelTestWithOptions { // eslint-disable-line no-unused-vars
     static schema = { c: String };
   }
 
@@ -147,7 +143,7 @@ test('@Model(options) are passed to the schema constructor', t => {
   t.is(retrievedOptions.typeKey, 'tests!')
 })
 
-test('@pre(\'method\') adds a hook to "method"', t => {
+test('@pre(\'method\') adds a hook to "method"', (t) => {
   let hookRan = false
   @Schema
   class TestSchema {
@@ -163,7 +159,7 @@ test('@pre(\'method\') adds a hook to "method"', t => {
     .then(() => t.is(hookRan, true))
 })
 
-test('@pre(\'method\') hooks that do not call `next()` have the correct `this`', t => {
+test('@pre(\'method\') hooks that do not call `next()` have the correct `this`', (t) => {
   let hookModel = null
   @Schema
   class TestSchema {
@@ -177,4 +173,6 @@ test('@pre(\'method\') hooks that do not call `next()` have the correct `this`',
   t.is(hookModel, null)
   return model.save()
     .then(() => t.is(hookModel, model))
-});
+})
+
+/* eslint-enable padded-blocks */
