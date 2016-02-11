@@ -143,6 +143,14 @@ test('@Model(options) are passed to the schema constructor', (t) => {
   t.is(retrievedOptions.typeKey, 'tests!')
 })
 
+test('instanceof works with @Model classes', (t) => {
+  @Model
+  class User {
+    static schema = { name: String };
+  }
+  t.ok(new User() instanceof User)
+})
+
 test('@pre(\'method\') adds a hook to "method"', (t) => {
   let hookRan = false
   @Schema
