@@ -7,8 +7,11 @@ export default function Model (nameOverride, maybeOptions = {}) {
   let options = typeof nameOverride === 'object' ? nameOverride : maybeOptions
 
   function makeModel (Class) {
+    // Connections can be defined as an option or as a static property.
+    // Options have precedence. Default to the global mongoose 'connection'.
+    const connection = options.connection || Class.connection || mongoose
     const SchemaConstructor = Schema(options || {})(Class)
-    return mongoose.model(name || Class.name, new SchemaConstructor())
+    return connection.model(name || Class.name, new SchemaConstructor())
   }
 
   // @Model

@@ -143,6 +143,29 @@ test('@Model(options) are passed to the schema constructor', (t) => {
   t.is(retrievedOptions.typeKey, 'tests!')
 })
 
+test('@Model({ connection }) registers the model on a non-default connection', (t) => {
+  const testConnection = mongoose.createConnection()
+  @Model({ connection: testConnection })
+  class CustomConnection {
+    static schema = { d: String };
+  }
+
+  t.is(testConnection.model('CustomConnection'), CustomConnection)
+  t.not(mongoose.model('CustomConnection'), CustomConnection)
+})
+
+test('@Model uses "connection" option from static key', (t) => {
+  const testConnection = mongoose.createConnection()
+  @Model
+  class CustomConnection {
+    static connection = testConnection;
+    static schema = { e: String };
+  }
+
+  t.is(testConnection.model('CustomConnection'), CustomConnection)
+  t.not(mongoose.model('CustomConnection'), CustomConnection)
+})
+
 test('instanceof works with @Model classes', (t) => {
   @Model
   class User {
