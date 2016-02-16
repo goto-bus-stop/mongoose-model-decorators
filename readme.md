@@ -91,11 +91,14 @@ Mongoose.
 ### `@Model`, `@Model()`, `@Model(options={})`
 
 Creates a Mongoose schema from a class definition, and defines it on the global
-mongoose connection. If you pass any options, they're passed straight through
-to `@Schema`.
+mongoose connection.
+
+You can specify the Mongoose connection to attach the model to in the
+`connection` option (defaults to `mongoose`). Other options are passed straight
+through to `@Schema`.
 
 ```js
-@Model({ collection: 'best_users' })
+@Model({ connection: myConnection, collection: 'best_users' })
 class User {
   // …
 }
@@ -108,6 +111,21 @@ is equivalent to:
 class UserSchema {
   // …
 }
+myConnection.model('User', new UserSchema)
+```
+
+And without a `connection` option:
+
+```js
+@Model
+class User { /* … */ }
+```
+
+is equivalent to:
+
+```js
+@Schema
+class UserSchema { /* … */ }
 require('mongoose').model('User', new UserSchema)
 ```
 
