@@ -9,9 +9,14 @@
     "build": "babel --out-dir . src",
     "prepublish": "npm run build",
     "test:lint": "standard test.js src/**/*.js",
-    "test:compile": "babel test.js > test.compiled.js",
-    "test:clean": "rm test.compiled.js",
-    "test": "npm run test:compile && ava test.compiled.js && npm run test:clean && npm run test:lint"
+    "test": "ava && npm run test:lint"
+  },
+  "ava": {
+    "files": [
+      "test.js"
+    ],
+    "require": "babel-register",
+    "babel": "inherit"
   },
   "standard": {
     "parser": "babel-eslint"
@@ -29,7 +34,7 @@
     "model"
   ],
   "devDependencies": {
-    "ava": "^0.11.0",
+    "ava": "^0.13.0",
     "babel-cli": "^6.4.5",
     "babel-eslint": "^4.1.8",
     "babel-plugin-transform-class-properties": "^6.4.0",
@@ -37,6 +42,7 @@
     "babel-plugin-transform-export-extensions": "^6.4.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-2": "^6.3.13",
+    "babel-register": "^6.7.2",
     "mongoose": "4.x",
     "standard": "^6.0.4"
   },
