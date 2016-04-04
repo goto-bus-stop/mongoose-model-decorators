@@ -7,6 +7,11 @@ import Schema, { pre } from './Schema'
 // decorators calls, so we disable it!
 /* eslint-disable padded-blocks */
 
+// Mock saves, for testing hooks.
+mongoose.Model.prototype.save = function (cb) {
+  setTimeout(() => cb(null, this), 1)
+}
+
 @Schema
 class PersonSchema {
   static schema = {
