@@ -3,6 +3,5 @@ sudo: false
 script:
   - npm test
 node_js:
-  - "0.12"
   - "4"
   - "5"
