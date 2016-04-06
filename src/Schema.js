@@ -65,7 +65,9 @@ const makeSchema = (options) => (Class) => {
         if (cb.length === 0) {
           schema[hookName](method, function (next) {
             cb.call(this)
-            next()
+            if (hookName !== 'post') {
+              next()
+            }
           })
         } else {
           schema[hookName](method, cb)

@@ -1,7 +1,7 @@
 import test from 'ava'
 import mongoose, { Schema as MongooseSchema } from 'mongoose'
 import Model from './Model'
-import Schema, { pre } from './Schema'
+import Schema, { pre, post } from './Schema'
 
 // the padded-blocks rule doesn't play nice with lines containing only
 // decorators calls, so we disable it!
@@ -201,6 +201,37 @@ test('@pre(\'method\') hooks that do not call `next()` have the correct `this`',
   class TestSchema {
     @pre('save')
     logSave () {
+      hookModel = this
+    }
+  }
+
+  const model = new (modelify(new TestSchema()))
+  t.is(hookModel, null)
+  return model.save()
+    .then(() => t.is(hookModel, model))
+})
+
+test('@post(\'validate\') should not call `next()`', (t) => {
+  let hookModel = null
+  @Schema
+  class TestSchema {
+    @post('validate')
+    logValidate () {
+      hookModel = this
+    }
+  }
+
+  const model = new (modelify(new TestSchema()))
+  t.is(hookModel, null)
+  t.notThrows(model.save)
+})
+
+test('@post(\'validate\') have the correct `this`', (t) => {
+  let hookModel = null
+  @Schema
+  class TestSchema {
+    @post('validate')
+    logValidate () {
       hookModel = this
     }
   }
