@@ -49,8 +49,8 @@ function modelify (schema) {
 
 test('@Schema converts an ES2016 class to a mongoose.Schema', (t) => {
   const schema = new PersonSchema()
-  t.ok(schema !== null)
-  t.ok(schema instanceof MongooseSchema)
+  t.truthy(schema !== null)
+  t.truthy(schema instanceof MongooseSchema)
 })
 
 test('@Schema keeps instance methods', (t) => {
@@ -89,7 +89,7 @@ test('@Schema supports static property getter/setters', (t) => {
 
 test('`this` in static methods passed to @Schema binds to the generated Model class', (t) => {
   const Person = modelify(new PersonSchema())
-  t.ok(Person.randomPerson() instanceof Person)
+  t.truthy(Person.randomPerson() instanceof Person)
 })
 
 test('Schema options can be defined as static class properties', (t) => {
@@ -121,7 +121,7 @@ test('@Model(className) registers a new model with mongoose', (t) => {
   class Anon { // eslint-disable-line no-unused-vars
     static schema = { value: String };
   }
-  t.ok(mongoose.modelNames().indexOf('ModelTest0') !== -1)
+  t.truthy(mongoose.modelNames().indexOf('ModelTest0') !== -1)
 })
 
 test('@Model and @Model() infer the model name from the decorated class', (t) => {
@@ -129,13 +129,13 @@ test('@Model and @Model() infer the model name from the decorated class', (t) =>
   class ModelTest1 { // eslint-disable-line no-unused-vars
     static schema = { a: String };
   }
-  t.ok(mongoose.modelNames().indexOf('ModelTest1') !== -1)
+  t.truthy(mongoose.modelNames().indexOf('ModelTest1') !== -1)
 
   @Model()
   class ModelTest2 { // eslint-disable-line no-unused-vars
     static schema = { b: String };
   }
-  t.ok(mongoose.modelNames().indexOf('ModelTest2') !== -1)
+  t.truthy(mongoose.modelNames().indexOf('ModelTest2') !== -1)
 })
 
 test('@Model(options) are passed to the schema constructor', (t) => {
@@ -176,7 +176,7 @@ test('instanceof works with @Model classes', (t) => {
   class User {
     static schema = { name: String };
   }
-  t.ok(new User() instanceof User)
+  t.truthy(new User() instanceof User)
 })
 
 test('@pre(\'method\') adds a hook to "method"', (t) => {
