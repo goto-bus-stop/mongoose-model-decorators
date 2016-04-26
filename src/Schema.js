@@ -22,12 +22,13 @@ const makeSchema = (options) => (Class) => {
     const types = Class.schema
     const methods = Object.getOwnPropertyNames(Class.prototype).filter((name) => !ignoreMethods[name])
     const statics = Object.getOwnPropertyNames(Class).filter((name) => !ignoreStatics[name])
-    const classOptions = optionNames
-      .filter((name) => name in Class)
-      .reduce((opts, name) => {
+
+    const classOptions = optionNames.reduce((opts, name) => {
+      if (name in Class) {
         opts[name] = Class[name]
-        return opts
-      }, {})
+      }
+      return opts
+    }, {})
 
     // options passed to the decorator constructor override options defined in
     // the class body
