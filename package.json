@@ -5,6 +5,9 @@
   "license": "MIT",
   "repository": "goto-bus-stop/mongoose-model-decorators",
   "author": "René Kooi <rene@kooi.me>",
+  "contributors": [
+    "louis (https://github.com/dotlouis)"
+  ],
   "scripts": {
     "build": "babel --out-dir . src",
     "prepublish": "npm run build",
