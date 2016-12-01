@@ -3,10 +3,6 @@ import mongoose, { Schema as MongooseSchema } from 'mongoose'
 import Model from './Model'
 import Schema, { pre, post } from './Schema'
 
-// the padded-blocks rule doesn't play nice with lines containing only
-// decorators calls, so we disable it!
-/* eslint-disable padded-blocks */
-
 // Mock saves, for testing hooks.
 mongoose.Model.prototype.save = function (cb) {
   setTimeout(() => cb(null, this), 1)
@@ -98,7 +94,7 @@ test('Schema options can be defined as static class properties', (t) => {
     class {
       static typeKey = 'anotherType';
     }
-  )
+  )()
 
   t.is(schema.options.typeKey, 'anotherType')
 })
@@ -110,7 +106,7 @@ test('Schema options passed to @Schema override options defined in the class bod
       static typeKey = 'definedInClass';
       static versionKey = 'alsoDefinedInClass';
     }
-  )
+  )()
 
   t.is(schema.options.typeKey, 'definedInDecorator')
   t.is(schema.options.versionKey, 'alsoDefinedInClass')
@@ -205,7 +201,9 @@ test('@pre(\'method\') hooks that do not call `next()` have the correct `this`',
     }
   }
 
-  const model = new (modelify(new TestSchema()))
+  const model = new (
+    modelify(new TestSchema())
+  )()
   t.is(hookModel, null)
   return model.save()
     .then(() => t.is(hookModel, model))
@@ -221,7 +219,9 @@ test('@post(\'validate\') should not call `next()`', (t) => {
     }
   }
 
-  const model = new (modelify(new TestSchema()))
+  const model = new (
+    modelify(new TestSchema())
+  )()
   t.is(hookModel, null)
   t.notThrows(model.save)
 })
@@ -236,10 +236,10 @@ test('@post(\'validate\') have the correct `this`', (t) => {
     }
   }
 
-  const model = new (modelify(new TestSchema()))
+  const model = new (
+    modelify(new TestSchema())
+  )()
   t.is(hookModel, null)
   return model.save()
     .then(() => t.is(hookModel, model))
 })
-
-/* eslint-enable padded-blocks */
