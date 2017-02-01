@@ -225,7 +225,7 @@ test('@post(\'validate\') should not call `next()`', (t) => {
     modelify(new TestSchema())
   )()
   t.is(hookModel, null)
-  t.notThrows(model.save)
+  t.notThrows(model.save.bind(model))
 })
 
 test('@post(\'validate\') have the correct `this`', (t) => {
