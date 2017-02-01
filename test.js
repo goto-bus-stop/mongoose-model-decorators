@@ -3,6 +3,8 @@ import mongoose, { Schema as MongooseSchema } from 'mongoose'
 import Model from './Model'
 import Schema, { pre, post } from './Schema'
 
+mongoose.Promise = Promise
+
 // Mock saves, for testing hooks.
 mongoose.Model.prototype.save = function (cb) {
   setTimeout(() => cb(null, this), 1)
