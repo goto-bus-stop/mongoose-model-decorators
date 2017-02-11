@@ -50,6 +50,6 @@
     "standard": "^8.6.0"
   },
   "peerDependencies": {
-    "mongoose": "4.x"
+    "mongoose": "^4.8.2"
   }
 }
