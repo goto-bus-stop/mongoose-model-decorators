@@ -47,7 +47,7 @@
     "babel-preset-stage-2": "^6.3.13",
     "babel-register": "^6.7.2",
     "mongoose": "4.x",
-    "standard": "^8.6.0"
+    "standard": "^9.0.2"
   },
   "peerDependencies": {
     "mongoose": "^4.8.2"
