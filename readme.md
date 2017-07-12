@@ -2,6 +2,10 @@
 
 ES2016 decorator functions for building Mongoose models.
 
+> As of Mongoose 4.7.0, Mongoose includes a `loadClass` function with which ES classes can be used to define Mongoose models.
+> It's a bit different than this module, but it may suit your needs.
+> See [the docs](http://mongoosejs.com/docs/advanced_schemas.html) for more.
+
 [Installation](#installation) - [Usage](#usage) - [API](#api) -
 [Translations](#translations) - [Licence](#licence)
 
