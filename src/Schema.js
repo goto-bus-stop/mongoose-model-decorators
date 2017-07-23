@@ -10,8 +10,16 @@ const optionNames = [
   'toJSON', 'toObject', 'typeKey', 'validateBeforeSave', 'versionKey'
 ]
 
-const ignoreMethods = { constructor: true }
-const ignoreStatics = { length: true, name: true, prototype: true, schema: true }
+const ignoreMethods = {
+  constructor: true
+}
+const ignoreStatics = {
+  length: true,
+  name: true,
+  prototype: true,
+  schema: true,
+  configureSchema: true
+}
 
 optionNames.forEach((name) => {
   ignoreStatics[name] = true
@@ -20,6 +28,7 @@ optionNames.forEach((name) => {
 const makeSchema = (options) => (Class) => {
   return function SchemaConstructor () {
     const types = Class.schema
+    const configure = Class.configureSchema || (() => {})
     const methods = Object.getOwnPropertyNames(Class.prototype).filter((name) => !ignoreMethods[name])
     const statics = Object.getOwnPropertyNames(Class).filter((name) => !ignoreStatics[name])
 
@@ -75,6 +84,8 @@ const makeSchema = (options) => (Class) => {
         }
       })
     }
+
+    configure(schema)
 
     return schema
   }

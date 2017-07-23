@@ -245,3 +245,15 @@ test('@post(\'validate\') have the correct `this`', (t) => {
   return model.save()
     .then(() => t.is(hookModel, model))
 })
+
+test('can do anything in `configureSchema` method', (t) => {
+  @Schema
+  class TestSchema {
+    static configureSchema (schema) {
+      schema.itWorked = true
+    }
+  }
+
+  const schema = new TestSchema()
+  t.truthy(schema.itWorked)
+})

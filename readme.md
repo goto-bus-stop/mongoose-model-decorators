@@ -71,6 +71,22 @@ class User {
 }
 ```
 
+You can also define a `configureSchema` method which will be called on the schema
+after it is instantiated, so you can do anything to it that may not be supported
+by `mongoose-model-decorators` otherwise:
+
+```js
+@Schema
+class User {
+  static configureSchema (schema) {
+    schema.query.byName = function (name) {
+      return this.find({ username: name })
+    }
+    schema.index({ username: 1, joinedAt: 1 }, { unique: true })
+  }
+}
+```
+
 ### `@Schema(options={})`
 
 Creates a [Mongoose Schema](http://mongoosejs.com/docs/guide.html) from a Class
