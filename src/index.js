@@ -1,4 +1,13 @@
-export Schema, { default as createSchema } from './Schema'
-export { pre, post } from './Schema'
-export Model, { default as createModel } from './Model'
-export Plugin from './Plugin'
+import Schema, { pre, post } from './Schema'
+import Model from './Model'
+import Plugin from './Plugin'
+
+export {
+  Schema,
+  Schema as createSchema,
+  Model,
+  Model as createModel,
+  Plugin,
+  pre,
+  post
+}

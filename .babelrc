@@ -1,5 +1,3 @@
 { "presets": [ "es2015", "stage-2" ]
 , "plugins":
-  [ "transform-decorators-legacy"
-  , "transform-class-properties"
-  , "transform-export-extensions" ] }
+  [ "transform-decorators" ] }

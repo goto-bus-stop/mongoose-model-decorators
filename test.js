@@ -1,5 +1,5 @@
-import test from 'ava'
-import mongoose, { Schema as MongooseSchema } from 'mongoose'
+import test from 'tape'
+import mongoose from 'mongoose'
 import Model from './Model'
 import Schema, { pre, post } from './Schema'
 
@@ -46,51 +46,65 @@ function modelify (schema) {
 }
 
 test('@Schema converts an ES2016 class to a mongoose.Schema', (t) => {
+  t.plan(2)
+
   const schema = new PersonSchema()
-  t.truthy(schema !== null)
-  t.truthy(schema instanceof MongooseSchema)
+  t.ok(schema !== null)
+  t.ok(schema instanceof mongoose.Schema)
 })
 
 test('@Schema keeps instance methods', (t) => {
+  t.plan(3)
+
   const schema = new PersonSchema()
-  t.is(typeof schema.methods.incrementAge, 'function')
+  t.equal(typeof schema.methods.incrementAge, 'function')
 
   const Person = modelify(schema)
   const person = new Person({ name: 'Instance methods', age: 12 })
-  t.is(person.age, 12)
+  t.equal(person.age, 12)
   person.incrementAge()
-  t.is(person.age, 13)
+  t.equal(person.age, 13)
 })
 
 test('@Schema adds virtuals for instance getters and setters', (t) => {
+  t.plan(5)
+
   const schema = new PersonSchema()
-  t.is(typeof schema.virtuals.nextAge, 'object')
-  t.is(schema.virtuals.nextAge.getters.length, 1)
-  t.is(schema.virtuals.nextAge.setters.length, 1)
+  t.equal(typeof schema.virtuals.nextAge, 'object')
+  t.equal(schema.virtuals.nextAge.getters.length, 1)
+  t.equal(schema.virtuals.nextAge.setters.length, 1)
 
   const Person = modelify(schema)
   const person = new Person({ name: 'Virtual Types', age: 19 })
-  t.is(person.nextAge, 20)
+  t.equal(person.nextAge, 20)
   person.nextAge = 25
-  t.is(person.age, 24)
+  t.equal(person.age, 24)
 })
 
 test('@Schema keeps static methods', (t) => {
+  t.plan(1)
+
   const schema = new PersonSchema()
-  t.is(typeof modelify(schema).randomPerson, 'function')
+  t.equal(typeof modelify(schema).randomPerson, 'function')
 })
 
 test('@Schema supports static property getter/setters', (t) => {
+  t.plan(1)
+
   const Person = modelify(new PersonSchema())
-  t.is(Person.count, 10)
+  t.equal(Person.count, 10)
 })
 
 test('`this` in static methods passed to @Schema binds to the generated Model class', (t) => {
+  t.plan(1)
+
   const Person = modelify(new PersonSchema())
-  t.truthy(Person.randomPerson() instanceof Person)
+  t.ok(Person.randomPerson() instanceof Person)
 })
 
 test('Schema options can be defined as static class properties', (t) => {
+  t.plan(1)
+
   const schema = new (
     @Schema
     class {
@@ -98,10 +112,12 @@ test('Schema options can be defined as static class properties', (t) => {
     }
   )()
 
-  t.is(schema.options.typeKey, 'anotherType')
+  t.equal(schema.options.typeKey, 'anotherType')
 })
 
 test('Schema options passed to @Schema override options defined in the class body', (t) => {
+  t.plan(2)
+
   const schema = new (
     @Schema({ typeKey: 'definedInDecorator' })
     class {
@@ -110,54 +126,64 @@ test('Schema options passed to @Schema override options defined in the class bod
     }
   )()
 
-  t.is(schema.options.typeKey, 'definedInDecorator')
-  t.is(schema.options.versionKey, 'alsoDefinedInClass')
+  t.equal(schema.options.typeKey, 'definedInDecorator')
+  t.equal(schema.options.versionKey, 'alsoDefinedInClass')
 })
 
 test('@Model(className) registers a new model with mongoose', (t) => {
+  t.plan(1)
+
   @Model('ModelTest0')
   class Anon { // eslint-disable-line no-unused-vars
     static schema = { value: String };
   }
-  t.truthy(mongoose.modelNames().indexOf('ModelTest0') !== -1)
+  t.ok(mongoose.modelNames().indexOf('ModelTest0') !== -1)
 })
 
 test('@Model and @Model() infer the model name from the decorated class', (t) => {
+  t.plan(2)
+
   @Model
   class ModelTest1 { // eslint-disable-line no-unused-vars
     static schema = { a: String };
   }
-  t.truthy(mongoose.modelNames().indexOf('ModelTest1') !== -1)
+  t.ok(mongoose.modelNames().indexOf('ModelTest1') !== -1)
 
   @Model()
   class ModelTest2 { // eslint-disable-line no-unused-vars
     static schema = { b: String };
   }
-  t.truthy(mongoose.modelNames().indexOf('ModelTest2') !== -1)
+  t.ok(mongoose.modelNames().indexOf('ModelTest2') !== -1)
 })
 
 test('@Model(options) are passed to the schema constructor', (t) => {
+  t.plan(1)
+
   @Model({ typeKey: 'tests!' })
   class ModelTestWithOptions { // eslint-disable-line no-unused-vars
     static schema = { c: String };
   }
 
   const retrievedOptions = mongoose.modelSchemas.ModelTestWithOptions.options
-  t.is(retrievedOptions.typeKey, 'tests!')
+  t.equal(retrievedOptions.typeKey, 'tests!')
 })
 
 test('@Model({ connection }) registers the model on a non-default connection', (t) => {
+  t.plan(2)
+
   const testConnection = mongoose.createConnection()
   @Model({ connection: testConnection })
   class CustomConnection {
     static schema = { d: String };
   }
 
-  t.is(testConnection.model('CustomConnection'), CustomConnection)
+  t.equal(testConnection.model('CustomConnection'), CustomConnection)
   t.not(mongoose.model('CustomConnection'), CustomConnection)
 })
 
 test('@Model uses "connection" option from static key', (t) => {
+  t.plan(2)
+
   const testConnection = mongoose.createConnection()
   @Model
   class CustomConnection {
@@ -165,19 +191,23 @@ test('@Model uses "connection" option from static key', (t) => {
     static schema = { e: String };
   }
 
-  t.is(testConnection.model('CustomConnection'), CustomConnection)
+  t.equal(testConnection.model('CustomConnection'), CustomConnection)
   t.not(mongoose.model('CustomConnection'), CustomConnection)
 })
 
 test('instanceof works with @Model classes', (t) => {
+  t.plan(1)
+
   @Model
   class User {
     static schema = { name: String };
   }
-  t.truthy(new User() instanceof User)
+  t.ok(new User() instanceof User)
 })
 
 test('@pre(\'method\') adds a hook to "method"', (t) => {
+  t.plan(2)
+
   let hookRan = false
   @Schema
   class TestSchema {
@@ -188,12 +218,15 @@ test('@pre(\'method\') adds a hook to "method"', (t) => {
   }
 
   const TestModel = modelify(new TestSchema())
-  t.is(hookRan, false)
-  return new TestModel().save()
-    .then(() => t.is(hookRan, true))
+  t.equal(hookRan, false)
+  new TestModel().save()
+    .then(() => t.equal(hookRan, true))
+    .catch(t.fail)
 })
 
 test('@pre(\'method\') hooks that do not call `next()` have the correct `this`', (t) => {
+  t.plan(2)
+
   let hookModel = null
   @Schema
   class TestSchema {
@@ -206,12 +239,15 @@ test('@pre(\'method\') hooks that do not call `next()` have the correct `this`',
   const model = new (
     modelify(new TestSchema())
   )()
-  t.is(hookModel, null)
-  return model.save()
-    .then(() => t.is(hookModel, model))
+  t.equal(hookModel, null)
+  model.save()
+    .then(() => t.equal(hookModel, model))
+    .catch(t.fail)
 })
 
 test('@post(\'validate\') should not call `next()`', (t) => {
+  t.plan(2)
+
   let hookModel = null
   @Schema
   class TestSchema {
@@ -224,11 +260,13 @@ test('@post(\'validate\') should not call `next()`', (t) => {
   const model = new (
     modelify(new TestSchema())
   )()
-  t.is(hookModel, null)
-  t.notThrows(model.save.bind(model))
+  t.equal(hookModel, null)
+  t.doesNotThrow(model.save.bind(model))
 })
 
 test('@post(\'validate\') have the correct `this`', (t) => {
+  t.plan(2)
+
   let hookModel = null
   @Schema
   class TestSchema {
@@ -241,12 +279,15 @@ test('@post(\'validate\') have the correct `this`', (t) => {
   const model = new (
     modelify(new TestSchema())
   )()
-  t.is(hookModel, null)
-  return model.save()
-    .then(() => t.is(hookModel, model))
+  t.equal(hookModel, null)
+  model.save()
+    .then(() => t.equal(hookModel, model))
+    .catch(t.fail)
 })
 
 test('can do anything in `configureSchema` method', (t) => {
+  t.plan(1)
+
   @Schema
   class TestSchema {
     static configureSchema (schema) {
@@ -255,5 +296,5 @@ test('can do anything in `configureSchema` method', (t) => {
   }
 
   const schema = new TestSchema()
-  t.truthy(schema.itWorked)
+  t.ok(schema.itWorked)
 })
