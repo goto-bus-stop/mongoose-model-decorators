@@ -30,12 +30,12 @@
     "model"
   ],
   "devDependencies": {
-    "babel-cli": "^7.0.0-beta.2",
+    "@babel/cli": "^7.0.0-beta.5",
+    "@babel/plugin-proposal-decorators": "^7.0.0-beta.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.4",
+    "@babel/preset-env": "^7.0.0-beta.5",
+    "@babel/register": "^7.0.0-beta.5",
     "babel-eslint": "^8.0.1",
-    "babel-plugin-transform-decorators": "^7.0.0-beta.2",
-    "babel-preset-es2015": "^7.0.0-beta.2",
-    "babel-preset-stage-2": "^7.0.0-beta.2",
-    "babel-register": "^7.0.0-beta.2",
     "mongoose": "^4.12.1",
     "standard": "^10.0.3",
     "tape": "^4.8.0"
