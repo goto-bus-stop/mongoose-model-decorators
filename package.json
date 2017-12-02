@@ -12,7 +12,7 @@
     "build": "babel --out-dir . src",
     "prepublish": "npm run build",
     "test:lint": "standard test.js src/**/*.js",
-    "test": "tape -r babel-register test.js && npm run test:lint"
+    "test": "tape -r @babel/register test.js && npm run test:lint"
   },
   "standard": {
     "parser": "babel-eslint"
@@ -30,13 +30,15 @@
     "model"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.5",
-    "@babel/plugin-proposal-decorators": "^7.0.0-beta.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.4",
-    "@babel/preset-env": "^7.0.0-beta.5",
-    "@babel/register": "^7.0.0-beta.5",
-    "babel-eslint": "^8.0.1",
-    "mongoose": "^4.12.1",
+    "@babel/cli": "^7.0.0-beta.34",
+    "@babel/core": "^7.0.0-beta.34",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.34",
+    "@babel/plugin-proposal-decorators": "^7.0.0-beta.34",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.34",
+    "@babel/preset-env": "^7.0.0-beta.34",
+    "@babel/register": "^7.0.0-beta.34",
+    "babel-eslint": "^8.0.3",
+    "mongoose": "^4.13.5",
     "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
