@@ -36,7 +36,7 @@
     "@babel/plugin-proposal-decorators": "^7.0.0-beta.34",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.34",
     "@babel/preset-env": "^7.0.0-beta.34",
-    "@babel/register": "^7.0.0-beta.34",
+    "@babel/register": "^7.0.0-beta.40",
     "babel-eslint": "^8.0.3",
     "mongoose": "^4.13.5",
     "standard": "^10.0.3",
