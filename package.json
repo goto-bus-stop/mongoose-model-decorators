@@ -31,7 +31,7 @@
   ],
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.34",
-    "@babel/core": "^7.0.0-beta.34",
+    "@babel/core": "^7.0.0-beta.41",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.34",
     "@babel/plugin-proposal-decorators": "^7.0.0-beta.34",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.34",
